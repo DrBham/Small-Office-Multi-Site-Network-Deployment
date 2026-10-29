@@ -1,13 +1,13 @@
 # Small Office Multi-Site Network Deployment
 
 > **MikroTik MTCNA Home Lab — Final Project**  
-> **Status:** Phase 01 Completed · Phase 02 Not Started · **Design baseline:** Network Design v1.0 — Approved (29 October 2026) · **Environment:** GNS3 / MikroTik RouterOS
+> **Status:** Phase 01 Completed · Phase 02 In Progress (Topology Deployed; RouterOS Configuration Pending) · **Design baseline:** Network Design v1.0 — Approved (29 October 2026), interface mapping revision v1.1 · **Environment:** GNS3 / MikroTik RouterOS
 
 ## Project Overview
 
 This project simulates the design, deployment, validation, and troubleshooting of a small company's network across two offices: **Headquarters (HQ)** and **Branch Office**. It is the capstone project of a MikroTik MTCNA-oriented home lab learning journey and is intended to demonstrate practical **Junior Network Engineer** skills.
 
-The scenario is fictional and runs in a controlled lab environment. The Phase 01 design review has been completed and Network Design v1.0 has been approved. Deployment has not started; configuration and test results will be added only after they are completed and verified.
+The scenario is fictional and runs in a controlled lab environment. The Phase 01 design review has been completed and Network Design v1.0 has been approved. The GNS3 topology has been built with dedicated Final Project CHR nodes and an internal server container. RouterOS interface configuration and end-to-end service validation have not yet been completed; test results will be added only after verification.
 
 ## Business Scenario
 
@@ -38,31 +38,13 @@ The offices communicate through a **simulated ISP transit router**, not a real p
 
 > **Capacity note:** The 25 HQ and 10 Branch users are planning assumptions. Only two representative test clients per office will be instantiated in GNS3.
 
-## Approved Logical Topology — v1.0
+## Network Topology — GNS3 Deployment (Interface Mapping v1.1)
 
-```text
-                         +-------------------+
-                         |       R-ISP       |
-                         | Simulated Transit |
-                         +----+---------+----+
-                              |         |
-                    WAN-1     |         |     WAN-2
-                   /30        |         |       /30
-                      +-------+         +-------+
-                      |                         |
-                 +----+-----+             +-----+------+
-                 |   R-HQ   |             | R-BRANCH   |
-                 +----+-----+             +-----+------+
-                      |                         |
-                 +----+-----+             +-----+------+
-                 |  SW-HQ   |             | SW-BRANCH  |
-                 +--+--+--+-+             +---+----+---+
-                    |  |  |                   |    |
-               PC-HQ1  |  SRV-HQ-01        PC-BR1 PC-BR2
-                    PC-HQ2 (HTTP)
-```
+![Small Office Multi-Site Network Topology](assets/network-topology.png)
 
-This is the **approved logical design**, not a deployed GNS3 screenshot. Physical links and interface mapping will be validated during Phase 02 deployment.
+*Figure 1 — GNS3 topology showing Headquarters, Branch Office, simulated ISP transit, two client PCs per office, and the internal HTTP server at HQ. Network labels indicate the approved addressing plan, not yet verified device configuration.*
+
+The network is divided into HQ (`172.22.10.0/26`), Branch (`172.22.20.0/27`), and transit links (`10.255.10.0/30`, `10.255.10.4/30`). Router `ether1` is reserved for the separate VirtualBox Host-Only management network (`192.168.56.0/24`) and is not part of the simulated business traffic paths. The screenshot records physical/logical node placement and cabling only; application services and routed connectivity remain untested.
 
 ## Approved IP Addressing Plan — v1.0
 
@@ -77,20 +59,20 @@ The following addressing is the **approved Phase 01 design baseline**. Implement
 
 The internal web server is planned at **`172.22.10.10` (static)**, outside the HQ DHCP pool.
 
-### WANs and Router Interfaces
+### WANs and Router Interfaces — Mapping Revision v1.1
 
 | Router | Interface | Connects to | Approved address |
 | --- | --- | --- | --- |
-| R-HQ | `ether1` | R-ISP `ether1` | `10.255.10.1/30` |
-| R-HQ | `ether2` | SW-HQ | `172.22.10.1/26` |
-| R-ISP | `ether1` | R-HQ `ether1` | `10.255.10.2/30` |
-| R-ISP | `ether2` | R-BRANCH `ether1` | `10.255.10.5/30` |
-| R-BRANCH | `ether1` | R-ISP `ether2` | `10.255.10.6/30` |
-| R-BRANCH | `ether2` | SW-BRANCH | `172.22.20.1/27` |
+| NDS-CHR-HQ | `ether2` | NDS-CHR-ISP `ether2` | `10.255.10.1/30` |
+| NDS-CHR-HQ | `ether3` | SW-HQ `ether1` | `172.22.10.1/26` |
+| NDS-CHR-ISP | `ether2` | NDS-CHR-HQ `ether2` | `10.255.10.2/30` |
+| NDS-CHR-ISP | `ether3` | NDS-CHR-BRANCH `ether2` | `10.255.10.5/30` |
+| NDS-CHR-BRANCH | `ether2` | NDS-CHR-ISP `ether3` | `10.255.10.6/30` |
+| NDS-CHR-BRANCH | `ether3` | SW-BRANCH `ether1` | `172.22.20.1/27` |
 
 WAN-1: `10.255.10.0/30` · WAN-2: `10.255.10.4/30`.
 
-> Lab-only management adapters, if used for WinBox/VirtualBox access, will be documented separately from the simulated business network.
+> **Management plane:** `ether1` on each CHR is reserved for the VirtualBox Host-Only segment `192.168.56.0/24`. The segment is separate from the simulated WAN/LAN, and unique router management addresses must be confirmed before assigning IPs. The Windows host address observed during preparation was `192.168.56.112/24`.
 
 ## Approved Static Routing Plan
 
@@ -114,14 +96,14 @@ These are **approved planned routes**, not an exported or verified RouterOS conf
 | GNS3 | — | Network emulation |
 | WinBox / RouterOS CLI | — | Configuration and verification |
 
-**Total planned network nodes: 10.** Exact RouterOS and GNS3 versions will be recorded during deployment.
+**Total GNS3 network nodes: 10.** Three dedicated Final Project CHR nodes, two switches, four VPCS clients and one Docker server node are placed and linked. GNS3 VM was observed running server version 2.2.61; exact RouterOS versions remain to be recorded.
 
 ## Project Phases
 
 | Phase | Description | Status |
 | --- | --- | --- |
 | 01 | Business requirements, topology, addressing, design review | **Completed — Design v1.0 Approved** |
-| 02 | GNS3 topology deployment, RouterOS foundation and interface addressing | **Next — Not started** |
+| 02 | GNS3 topology deployment, RouterOS foundation and interface addressing | **In progress — topology deployed; RouterOS configuration pending** |
 | 03 | LAN and DHCP deployment | Not started |
 | 04 | Static routing integration | Not started |
 | 05 | Firewall and NAT requirement review | Not started |
@@ -164,14 +146,15 @@ The project uses a **KILLCRITIC mentoring workflow**: theory → design reasonin
 | Design reference | `NDS-NET-001` |
 | Baseline | Network Design v1.0 |
 | Approval date | 29 October 2026 |
-| Approval scope | Business requirements, logical topology, IP plan, interface mapping, routing plan, acceptance criteria |
+| Approval scope | Business requirements, logical topology, IP plan, original interface mapping, routing plan, acceptance criteria |
+| Mapping amendment | v1.1 — ether1 reserved for Host-Only management; project WAN/LAN links moved to ether2/ether3 |
 | Implementation status | Not started |
 
 ## Current Progress
 
 **Phase 01: Completed (29 October 2026).** Design B (two offices with an internal server at HQ) has passed the KILLCRITIC design review. Business requirements, logical topology, IP addressing, interface mapping, and planned static routes are **approved as Network Design v1.0**.
 
-**Phase 02: Next — Not started.** The upcoming work is to prepare virtual devices, place and connect the GNS3 nodes, verify interface mapping, perform initial RouterOS setup, validate interface addressing, and document deployment evidence. **No GNS3 deployment or RouterOS configuration has been completed yet.**
+**Phase 02: In progress.** Dedicated Final Project CHR nodes, switches, clients, and the Docker server node have been placed and cabled in GNS3; the updated topology is recorded above. GNS3 VM connectivity was restored and Docker node creation succeeded, but the initial root cause of the earlier compute-server error was not confirmed. Next: verify router instance isolation and management/interface mapping, then proceed with RouterOS foundation and addressing. **No RouterOS IP configuration or end-to-end tests are claimed complete.**
 
 ---
 
