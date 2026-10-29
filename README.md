@@ -1,13 +1,13 @@
 # Small Office Multi-Site Network Deployment
 
 > **MikroTik MTCNA Home Lab — Final Project**  
-> **Status:** Planning & Design (Phase 01) · **Design baseline:** Proposed v1.0 · **Environment:** GNS3 / MikroTik RouterOS
+> **Status:** Phase 01 Completed · Phase 02 Not Started · **Design baseline:** Network Design v1.0 — Approved (29 October 2026) · **Environment:** GNS3 / MikroTik RouterOS
 
 ## Project Overview
 
 This project simulates the design, deployment, validation, and troubleshooting of a small company's network across two offices: **Headquarters (HQ)** and **Branch Office**. It is the capstone project of a MikroTik MTCNA-oriented home lab learning journey and is intended to demonstrate practical **Junior Network Engineer** skills.
 
-The scenario is fictional and runs in a controlled lab environment. The design will be reviewed before implementation; configuration and test results will be added only after they are completed and verified.
+The scenario is fictional and runs in a controlled lab environment. The Phase 01 design review has been completed and Network Design v1.0 has been approved. Deployment has not started; configuration and test results will be added only after they are completed and verified.
 
 ## Business Scenario
 
@@ -38,7 +38,7 @@ The offices communicate through a **simulated ISP transit router**, not a real p
 
 > **Capacity note:** The 25 HQ and 10 Branch users are planning assumptions. Only two representative test clients per office will be instantiated in GNS3.
 
-## Proposed Logical Topology
+## Approved Logical Topology — v1.0
 
 ```text
                          +-------------------+
@@ -62,11 +62,11 @@ The offices communicate through a **simulated ISP transit router**, not a real p
                     PC-HQ2 (HTTP)
 ```
 
-This is a **logical draft**, not a final GNS3 screenshot. Physical links and interface mapping will be checked during design review.
+This is the **approved logical design**, not a deployed GNS3 screenshot. Physical links and interface mapping will be validated during Phase 02 deployment.
 
-## Proposed IP Addressing Plan
+## Approved IP Addressing Plan — v1.0
 
-The following addressing is **not yet approved** and may change after the Phase 01 design assessment.
+The following addressing is the **approved Phase 01 design baseline**. Implementation results will be verified during later phases; any necessary design changes will be documented.
 
 ### LANs
 
@@ -79,7 +79,7 @@ The internal web server is planned at **`172.22.10.10` (static)**, outside the H
 
 ### WANs and Router Interfaces
 
-| Router | Interface | Connects to | Proposed address |
+| Router | Interface | Connects to | Approved address |
 | --- | --- | --- | --- |
 | R-HQ | `ether1` | R-ISP `ether1` | `10.255.10.1/30` |
 | R-HQ | `ether2` | SW-HQ | `172.22.10.1/26` |
@@ -92,7 +92,7 @@ WAN-1: `10.255.10.0/30` · WAN-2: `10.255.10.4/30`.
 
 > Lab-only management adapters, if used for WinBox/VirtualBox access, will be documented separately from the simulated business network.
 
-## Proposed Static Routing
+## Approved Static Routing Plan
 
 | Router | Destination | Next hop |
 | --- | --- | --- |
@@ -101,7 +101,7 @@ WAN-1: `10.255.10.0/30` · WAN-2: `10.255.10.4/30`.
 | R-ISP | `172.22.20.0/27` | `10.255.10.6` |
 | R-BRANCH | `172.22.10.0/26` | `10.255.10.5` |
 
-These are **planned routes**, not an exported or verified RouterOS configuration. NAT is not required for inter-site communication through this controlled routed transit network; firewall policy must permit the required traffic.
+These are **approved planned routes**, not an exported or verified RouterOS configuration. NAT is not required for inter-site communication through this controlled routed transit network; firewall policy must permit the required traffic.
 
 ## Devices and Tools
 
@@ -120,8 +120,8 @@ These are **planned routes**, not an exported or verified RouterOS configuration
 
 | Phase | Description | Status |
 | --- | --- | --- |
-| 01 | Business requirements, topology, addressing, design review | **In progress** |
-| 02 | RouterOS foundation and interface addressing | Not started |
+| 01 | Business requirements, topology, addressing, design review | **Completed — Design v1.0 Approved** |
+| 02 | GNS3 topology deployment, RouterOS foundation and interface addressing | **Next — Not started** |
 | 03 | LAN and DHCP deployment | Not started |
 | 04 | Static routing integration | Not started |
 | 05 | Firewall and NAT requirement review | Not started |
@@ -157,9 +157,21 @@ Evidence (screenshots, command outputs, and troubleshooting notes) will be linke
 
 The project uses a **KILLCRITIC mentoring workflow**: theory → design reasoning → implementation → verification → troubleshooting → assessment. Progression requires explaining *why* a change is needed and demonstrating the expected result—not merely copying commands or obtaining a successful ping.
 
+## Design Approval Record
+
+| Item | Value |
+| --- | --- |
+| Design reference | `NDS-NET-001` |
+| Baseline | Network Design v1.0 |
+| Approval date | 29 October 2026 |
+| Approval scope | Business requirements, logical topology, IP plan, interface mapping, routing plan, acceptance criteria |
+| Implementation status | Not started |
+
 ## Current Progress
 
-**Phase 01: Design review pending.** Design B (two offices with an internal server at HQ) has been selected. Business requirements, network topology, IP allocations, and routing are proposed but **not yet frozen or deployed**.
+**Phase 01: Completed (29 October 2026).** Design B (two offices with an internal server at HQ) has passed the KILLCRITIC design review. Business requirements, logical topology, IP addressing, interface mapping, and planned static routes are **approved as Network Design v1.0**.
+
+**Phase 02: Next — Not started.** The upcoming work is to prepare virtual devices, place and connect the GNS3 nodes, verify interface mapping, perform initial RouterOS setup, validate interface addressing, and document deployment evidence. **No GNS3 deployment or RouterOS configuration has been completed yet.**
 
 ---
 
