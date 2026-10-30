@@ -1,13 +1,13 @@
 # Small Office Multi-Site Network Deployment
 
 > **MikroTik MTCNA Home Lab — Final Project**  
-> **Status:** Phase 01 Completed · Phase 02 In Progress (Topology Deployed; RouterOS Configuration Pending) · **Design baseline:** Network Design v1.0 — Approved (29 October 2026), interface mapping revision v1.1 · **Environment:** GNS3 / MikroTik RouterOS
+> **Status:** Phase 01 Completed · Phase 02 Completed (30 October 2026) · Phase 03 Not Started · **Design baseline:** Network Design v1.0 — Approved (29 October 2026), interface mapping revision v1.1 · **Environment:** GNS3 / MikroTik RouterOS
 
 ## Project Overview
 
 This project simulates the design, deployment, validation, and troubleshooting of a small company's network across two offices: **Headquarters (HQ)** and **Branch Office**. It is the capstone project of a MikroTik MTCNA-oriented home lab learning journey and is intended to demonstrate practical **Junior Network Engineer** skills.
 
-The scenario is fictional and runs in a controlled lab environment. The Phase 01 design review has been completed and Network Design v1.0 has been approved. The GNS3 topology has been built with dedicated Final Project CHR nodes and an internal server container. RouterOS interface configuration and end-to-end service validation have not yet been completed; test results will be added only after verification.
+The scenario is fictional and runs in a controlled lab environment. The Phase 01 design review has been completed and Network Design v1.0 has been approved. The GNS3 topology has been deployed using dedicated Final Project CHR nodes and an internal server container. RouterOS identity, management interface connectivity, WAN/LAN interface addressing, active connected routes, and directly connected WAN communication have been verified during Phase 02. DHCP, inter-site static routes, client-to-client communication, and HTTP service validation have not yet been implemented or verified.
 
 ## Business Scenario
 
@@ -42,13 +42,13 @@ The offices communicate through a **simulated ISP transit router**, not a real p
 
 ![Small Office Multi-Site Network Topology](assets/network-topology.png)
 
-*Figure 1 — GNS3 topology showing Headquarters, Branch Office, simulated ISP transit, two client PCs per office, and the internal HTTP server at HQ. Network labels indicate the approved addressing plan, not yet verified device configuration.*
+*Figure 1 — GNS3 topology showing Headquarters, Branch Office, simulated ISP transit, two client PCs per office, and the internal HTTP server at HQ. Network labels show the approved design; WAN/LAN router interface addressing was subsequently verified in Phase 02.*
 
-The network is divided into HQ (`172.22.10.0/26`), Branch (`172.22.20.0/27`), and transit links (`10.255.10.0/30`, `10.255.10.4/30`). Router `ether1` is reserved for the separate VirtualBox Host-Only management network (`192.168.56.0/24`) and is not part of the simulated business traffic paths. The screenshot records physical/logical node placement and cabling only; application services and routed connectivity remain untested.
+The network is divided into HQ (`172.22.10.0/26`), Branch (`172.22.20.0/27`), and transit links (`10.255.10.0/30`, `10.255.10.4/30`). Router `ether1` is reserved for the separate VirtualBox Host-Only management network (`192.168.56.0/24`) and is not part of the simulated business traffic paths. The screenshot records physical/logical node placement and cabling. Router interface IP addresses and directly connected WAN communication were verified separately during Phase 02; inter-site LAN routing and application services remain untested.
 
 ## Approved IP Addressing Plan — v1.0
 
-The following addressing is the **approved Phase 01 design baseline**. Implementation results will be verified during later phases; any necessary design changes will be documented.
+The following addressing is the **approved Phase 01 design baseline**. Router interface addressing was verified during Phase 02. DHCP pools and internal server settings remain planned for Phase 03; any necessary design changes will be documented.
 
 ### LANs
 
@@ -72,7 +72,7 @@ The internal web server is planned at **`172.22.10.10` (static)**, outside the H
 
 WAN-1: `10.255.10.0/30` · WAN-2: `10.255.10.4/30`.
 
-> **Management plane:** `ether1` on each CHR is reserved for the VirtualBox Host-Only segment `192.168.56.0/24`. The segment is separate from the simulated WAN/LAN, and unique router management addresses must be confirmed before assigning IPs. The Windows host address observed during preparation was `192.168.56.112/24`.
+> **Management plane:** `ether1` on each CHR is reserved for the VirtualBox Host-Only segment `192.168.56.0/24`. The segment is separate from the simulated WAN/LAN, and unique dynamic management addresses were verified during Phase 02 (HQ: `192.168.56.115/24`, ISP: `192.168.56.113/24`, Branch: `192.168.56.114/24`). These DHCP assignments may change. The Windows host address observed during preparation was `192.168.56.112/24`.
 
 ## Approved Static Routing Plan
 
@@ -96,15 +96,15 @@ These are **approved planned routes**, not an exported or verified RouterOS conf
 | GNS3 | — | Network emulation |
 | WinBox / RouterOS CLI | — | Configuration and verification |
 
-**Total GNS3 network nodes: 10.** Three dedicated Final Project CHR nodes, two switches, four VPCS clients and one Docker server node are placed and linked. GNS3 VM was observed running server version 2.2.61; exact RouterOS versions remain to be recorded.
+**Total GNS3 network nodes: 10.** Three dedicated Final Project CHR nodes, two switches, four VPCS clients, and one Docker server node have been placed and linked. GNS3 VM was observed running server version 2.2.61; exact RouterOS versions remain to be recorded.
 
 ## Project Phases
 
 | Phase | Description | Status |
 | --- | --- | --- |
 | 01 | Business requirements, topology, addressing, design review | **Completed — Design v1.0 Approved** |
-| 02 | GNS3 topology deployment, RouterOS foundation and interface addressing | **In progress — topology deployed; RouterOS configuration pending** |
-| 03 | LAN and DHCP deployment | Not started |
+| 02 | GNS3 topology deployment, RouterOS foundation and interface addressing | **Completed — 30 October 2026** |
+| 03 | LAN and DHCP deployment, local server preparation | **Next — Not started** |
 | 04 | Static routing integration | Not started |
 | 05 | Firewall and NAT requirement review | Not started |
 | 06 | Validation and controlled troubleshooting | Not started |
@@ -139,6 +139,51 @@ Evidence (screenshots, command outputs, and troubleshooting notes) will be linke
 
 The project uses a **KILLCRITIC mentoring workflow**: theory → design reasoning → implementation → verification → troubleshooting → assessment. Progression requires explaining *why* a change is needed and demonstrating the expected result—not merely copying commands or obtaining a successful ping.
 
+## Phase 02 — Verified Deployment Results
+
+The following findings were verified on **30 October 2026**; they are separate from future acceptance tests involving client DHCP, inter-site LAN access, or HTTP services.
+
+### Router Identity and Interface Addressing
+
+| Router identity | Management (ether1, DHCP) | Project WAN (ether2) | LAN / second WAN (ether3) |
+| --- | --- | --- | --- |
+| `NDS-CHR-HQ` | `192.168.56.115/24` | `10.255.10.1/30` | `172.22.10.1/26` |
+| `NDS-CHR-ISP` | `192.168.56.113/24` | `10.255.10.2/30` | `10.255.10.5/30` |
+| `NDS-CHR-BRANCH` | `192.168.56.114/24` | `10.255.10.6/30` | `172.22.20.1/27` |
+
+Management addresses are dynamic VirtualBox Host-Only leases. Screenshots of `/ip address print` and `/ip route print` confirmed expected **active connected routes (`DAc`)** for the management, WAN, and LAN networks on each router.
+
+### Directly Connected WAN Validation
+
+| Test ID | Source | Destination | Result |
+| --- | --- | --- | --- |
+| WAN-01 | HQ | `10.255.10.2` (ISP) | 10/10 received, 0% loss |
+| WAN-02 | ISP | `10.255.10.1` (HQ) | 10/10 received, 0% loss |
+| WAN-03 | ISP | `10.255.10.6` (Branch) | 10/10 received, 0% loss |
+| WAN-04 | Branch | `10.255.10.5` (ISP) | 10/10 received, 0% loss |
+
+These checks prove basic IP connectivity only between directly connected WAN neighbors. They **do not** prove inter-site LAN reachability, which will require additional routing and permitted traffic.
+
+### Infrastructure Troubleshooting Note
+
+During topology deployment, creation of the Docker server node initially failed due to GNS3 VM compute connectivity. Subsequent verification confirmed reachability of the GNS3 VM management IP, successful Web UI and API access, an online compute server, and successful server node creation. The precise initial root cause was **not established**.
+
+## Phase 03 — Planned LAN & DHCP Services
+
+**Status: Not started.** No DHCP server, LAN client lease, or internal HTTP service result is claimed complete.
+
+| Parameter | Headquarters (HQ) | Branch Office |
+| --- | --- | --- |
+| LAN subnet | `172.22.10.0/26` | `172.22.20.0/27` |
+| Default gateway | `172.22.10.1` | `172.22.20.1` |
+| Planned DHCP pool | `172.22.10.20–172.22.10.59` | `172.22.20.10–172.22.20.29` |
+| DHCP server interface | `ether3` | `ether3` |
+| Test clients | `PC-HQ-01`, `PC-HQ-02` | `PC-BR-01`, `PC-BR-02` |
+
+`SRV-HQ-01` is planned to use **static IPv4 `172.22.10.10/26`** with gateway `172.22.10.1`, outside the DHCP range.
+
+The phase will cover DHCP fundamentals (DORA, pools, networks, gateway, DNS, and leases), design verification, HQ and Branch DHCP deployment, client lease and gateway validation, local HTTP server preparation, troubleshooting, and a KILLCRITIC assessment. Configuration has not started.
+
 ## Design Approval Record
 
 | Item | Value |
@@ -146,15 +191,17 @@ The project uses a **KILLCRITIC mentoring workflow**: theory → design reasonin
 | Design reference | `NDS-NET-001` |
 | Baseline | Network Design v1.0 |
 | Approval date | 29 October 2026 |
-| Approval scope | Business requirements, logical topology, IP plan, original interface mapping, routing plan, acceptance criteria |
+| Approval scope | Business requirements, logical topology, IP plan, routing plan, acceptance criteria |
 | Mapping amendment | v1.1 — ether1 reserved for Host-Only management; project WAN/LAN links moved to ether2/ether3 |
-| Implementation status | Not started |
+| Phase 02 closure | 30 October 2026 — initial RouterOS setup, active connected routes, and four direct WAN ping tests verified |
 
 ## Current Progress
 
-**Phase 01: Completed (29 October 2026).** Design B (two offices with an internal server at HQ) has passed the KILLCRITIC design review. Business requirements, logical topology, IP addressing, interface mapping, and planned static routes are **approved as Network Design v1.0**.
+**Phase 01: Completed (29 October 2026).** Design B (two offices with an internal server at HQ) passed KILLCRITIC design review. Network Design v1.0 is approved with interface mapping amendment v1.1.
 
-**Phase 02: In progress.** Dedicated Final Project CHR nodes, switches, clients, and the Docker server node have been placed and cabled in GNS3; the updated topology is recorded above. GNS3 VM connectivity was restored and Docker node creation succeeded, but the initial root cause of the earlier compute-server error was not confirmed. Next: verify router instance isolation and management/interface mapping, then proceed with RouterOS foundation and addressing. **No RouterOS IP configuration or end-to-end tests are claimed complete.**
+**Phase 02: Completed (30 October 2026).** Dedicated Final Project CHR instances, GNS3 topology cabling, management connectivity, device identities, WAN/LAN interface addresses, active connected routes, and direct WAN neighbor ping tests were completed and verified. The initial cause of the earlier GNS3 VM connectivity fault remains unconfirmed.
+
+**Phase 03: Not started.** Next: implement and validate local DHCP services for both offices and prepare the internal HTTP server. Inter-site static routing, firewall policy validation, and end-to-end client/service testing remain future work.
 
 ---
 
