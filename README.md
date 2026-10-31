@@ -2,7 +2,8 @@
 
 # 🌐 Small Office Multi-Site Network Deployment
 
-**PT Nusa Digital Solusi (NDS) · MikroTik RouterOS · GNS3**
+**MikroTik CHR Lab with Firewall, NAT & Inter-Site Routing**  
+PT Nusa Digital Solusi (NDS) · GNS3 / VirtualBox
 
 ![Project](https://img.shields.io/badge/Project-NDS--NET--001-2563eb?style=flat-square)
 ![Progress](https://img.shields.io/badge/Progress-4%20of%207%20Phases-16a34a?style=flat-square)
@@ -35,7 +36,7 @@
 <li>Bidirectional HQ ↔ Branch connectivity</li>
 <li>Static routing through a simulated ISP</li>
 <li>Internal HTTP service at HQ</li>
-<li>Firewall policy review and traffic validation</li>
+<li>Firewall policy, controlled NAT demonstrations, and traffic validation</li>
 </ul>
 
 </td>
@@ -83,7 +84,7 @@ flowchart LR
     P1["01 · Network Design"] --> P2["02 · Infrastructure"]
     P2 --> P3["03 · DHCP & HTTP"]
     P3 --> P4["04 · Static Routing"]
-    P4 --> P5["05 · Firewall & NAT Review"]
+    P4 --> P5["05 · Firewall & NAT"]
     P5 --> P6["06 · Validation & Troubleshooting"]
     P6 --> P7["07 · Final Documentation"]
     classDef complete fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:2px;
@@ -100,9 +101,9 @@ flowchart LR
 | 02 | GNS3 deployment, interfaces & WAN neighbor connectivity | ✅ Completed |
 | 03 | LAN DHCP, client connectivity & HQ HTTP service | ✅ Completed |
 | 04 | Inter-site static routing & service connectivity | ✅ Completed |
-| 05 | Firewall policy and NAT requirement review | 🟠 Not started |
-| 06 | End-to-end validation & controlled troubleshooting | ⚪ Not started |
-| 07 | Final evidence and technical documentation | ⚪ Not started |
+| 05 | Firewall policy, NAT demonstrations & connection tracking | 🟠 Not started |
+| 06 | Acceptance tests, three controlled faults & optional captures | ⚪ Not started |
+| 07 | Sanitized exports, private backups & portfolio documentation | ⚪ Not started |
 
 <sub>Milestone dates: design approved 29 October 2026; infrastructure and LAN services verified 30 October 2026; inter-site routing verified 31 October 2026. Remaining phases have no scheduled dates.</sub>
 
@@ -112,23 +113,19 @@ flowchart LR
 <tr>
 <td width="50%" valign="top">
 <h3>🔵 Headquarters</h3>
-<table>
-<tr><td><strong>LAN</strong></td><td><code>172.22.10.0/26</code></td></tr>
-<tr><td><strong>Gateway</strong></td><td><code>172.22.10.1</code></td></tr>
-<tr><td><strong>DHCP Pool</strong></td><td><code>172.22.10.20–59</code></td></tr>
-<tr><td><strong>Capacity</strong></td><td>62 usable IPs</td></tr>
-<tr><td><strong>HTTP Server</strong></td><td><code>172.22.10.10</code></td></tr>
-</table>
+<p><strong>LAN:</strong> <code>172.22.10.0/26</code><br>
+<strong>Gateway:</strong> <code>172.22.10.1</code><br>
+<strong>DHCP Pool:</strong> <code>172.22.10.20–172.22.10.59</code><br>
+<strong>Capacity:</strong> 62 usable addresses<br>
+<strong>HTTP Server:</strong> <code>172.22.10.10</code></p>
 </td>
 <td width="50%" valign="top">
 <h3>🟢 Branch Office</h3>
-<table>
-<tr><td><strong>LAN</strong></td><td><code>172.22.20.0/27</code></td></tr>
-<tr><td><strong>Gateway</strong></td><td><code>172.22.20.1</code></td></tr>
-<tr><td><strong>DHCP Pool</strong></td><td><code>172.22.20.10–29</code></td></tr>
-<tr><td><strong>Capacity</strong></td><td>30 usable IPs</td></tr>
-<tr><td><strong>Access</strong></td><td>HQ resources via ISP</td></tr>
-</table>
+<p><strong>LAN:</strong> <code>172.22.20.0/27</code><br>
+<strong>Gateway:</strong> <code>172.22.20.1</code><br>
+<strong>DHCP Pool:</strong> <code>172.22.20.10–172.22.20.29</code><br>
+<strong>Capacity:</strong> 30 usable addresses<br>
+<strong>Access:</strong> HQ resources via simulated ISP</p>
 </td>
 </tr>
 </table>
@@ -194,13 +191,13 @@ All four static routes were verified in the RouterOS `main` routing table. **Int
 </ul>
 </td>
 <td width="50%" valign="top">
-<h3>🔐 Pending Security Validation</h3>
+<h3>🔐 Planned Security Work (Phase 05)</h3>
 <ul>
-<li>Review existing RouterOS firewall filter rules</li>
-<li>Define permitted <code>input</code> and <code>forward</code> traffic</li>
-<li>Verify NAT requirements and existing rules</li>
-<li>Test permitted and restricted traffic</li>
-<li>Document controlled troubleshooting results</li>
+<li>Audit filter, NAT, conntrack and management services</li>
+<li>Define <code>input</code> / <code>forward</code> policy and safe rule order</li>
+<li>Restrict SSH and WinBox to management access</li>
+<li>Demonstrate scoped source NAT and HTTP destination NAT</li>
+<li>Verify connection tracking and regression tests</li>
 </ul>
 </td>
 </tr>
@@ -208,7 +205,38 @@ All four static routes were verified in the RouterOS `main` routing table. **Int
 
 > **Validation boundary:** Branch HTTP success was measured using RouterOS Fetch from the **Branch router** with source IP `172.22.20.1`; direct HTTP testing from a Branch VPCS client has not been performed. ICMP tests from VPCS clients were verified separately.
 
-## 🛡️ Scope & Deployment Notes
+## 🔒 Planned Security & Testing Milestones
+
+<table>
+<tr>
+<td width="50%" valign="top">
+<h3>🟠 Phase 05 · Firewall & NAT</h3>
+<ul>
+<li><strong>Read-only baseline:</strong> firewall, NAT, conntrack, RouterOS services</li>
+<li><strong>Firewall policy:</strong> protect management, permit required LAN and inter-site traffic</li>
+<li><strong>Source NAT:</strong> temporary, narrowly scoped masquerade demonstration; remove afterward</li>
+<li><strong>Destination NAT:</strong> controlled WAN TCP/80 forwarding to HQ Nginx</li>
+<li><strong>Verification:</strong> rule order, service access, connection tracking and regression</li>
+</ul>
+<p><strong>Status:</strong> Not started. No new filter or NAT rules have been verified.</p>
+</td>
+<td width="50%" valign="top">
+<h3>⚪ Phase 06–07 · Evidence & Delivery</h3>
+<ul>
+<li><strong>Acceptance tests:</strong> recorded expected vs actual results</li>
+<li><strong>Fault cases:</strong> WAN link down, firewall blocking HTTP, incorrect next-hop</li>
+<li><strong>Recovery:</strong> baseline, fault, diagnosis, fix and retest</li>
+<li><strong>Configuration:</strong> private RouterOS binary backups; sanitized text exports</li>
+<li><strong>Portfolio:</strong> topology, test matrix, design rationale and troubleshooting reports</li>
+</ul>
+<p><strong>Status:</strong> Planned, with no unverified PASS claims.</p>
+</td>
+</tr>
+</table>
+
+> **Design safeguards:** The management segment uses VirtualBox Host-Only, not public WAN. Inter-site traffic already works without NAT. A NAT rule matching all traffic on HQ <code>ether2</code> could affect routing unexpectedly; any demonstration must be scoped and retested. Access to HQ WAN address <code>10.255.10.1</code> from BRANCH may require an explicit test route and verified return path. VPCS does not support <code>curl</code>, so application-level tests use RouterOS Fetch or an appropriate HTTP-capable endpoint.
+
+## 🛡️ Project Scope & Limitations
 
 <table>
 <tr>
@@ -219,8 +247,9 @@ All four static routes were verified in the RouterOS `main` routing table. **Int
 <li>Private WAN transit with three routers</li>
 <li>Static inter-site routing</li>
 <li>HQ internal HTTP service</li>
-<li>Firewall and NAT requirement review</li>
-<li>Technical connectivity verification</li>
+<li>Firewall policy, connection tracking & controlled NAT demonstrations</li>
+<li>End-to-end tests and three fault investigations</li>
+<li>Sanitized config exports and technical documentation</li>
 </ul>
 </td>
 <td width="50%" valign="top">
@@ -232,6 +261,7 @@ All four static routes were verified in the RouterOS `main` routing table. **Int
 <li>OSPF / BGP</li>
 <li>High availability</li>
 <li>Enterprise authentication</li>
+<li>Wireless and hardware-offload features in this virtual topology</li>
 </ul>
 </td>
 </tr>
