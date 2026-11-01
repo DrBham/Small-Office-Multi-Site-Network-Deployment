@@ -6,7 +6,7 @@
 
 ![Phase](https://img.shields.io/badge/Phase-06%20%7C%20Validation%20%26%20Troubleshooting-2563eb?style=flat-square)
 ![Status](https://img.shields.io/badge/Status-Work%20in%20Progress-f59e0b?style=flat-square)
-![Scenarios](https://img.shields.io/badge/Scenarios-1%20of%203%20Completed-64748b?style=flat-square)
+![Scenarios](https://img.shields.io/badge/Scenarios-2%20of%203%20Completed-16a34a?style=flat-square)
 
 **A collection of controlled network fault investigations, recovery procedures, and post-recovery verification for the NDS HQ–ISP–Branch topology.**
 
@@ -61,10 +61,10 @@ Each case records the observed symptoms, diagnostic evidence, verified root caus
 | Case | Fault Category | Investigation Scope | Status |
 |:--:|---|---|:--:|
 | **01** | [WAN Link Failure](scenario-01-wan-link-failure/) | ISP–HQ interface disabled, inactive HQ route, two-way connectivity recovery (5/5 each direction) | ✅ Completed |
-| **02** | [Firewall Policy Failure](scenario-02-firewall-policy-failure/) | Firewall chain, rule order, matching criteria, and packet counters | ⏳ Planned |
-| **03** | [Static Route Failure](scenario-03-static-route-failure/) | Route selection, destination prefixes, next-hop reachability, and recovery | ⏳ Planned |
+| **02** | [Firewall Policy Failure](scenario-02-firewall-policy-failure/) | ISP FORWARD ICMP DROP, 10 dropped packets, restored two-way connectivity (5/5 each direction) | ✅ Completed |
+| **03** | [Static Route Failure](scenario-03-static-route-failure/) | Route selection, destination prefixes, next-hop reachability, and recovery | ⏳ Planned · Next |
 
-> Case 01 is completed and documented. Cases 02–03 remain planned. Scenarios are conducted individually, with baseline recovery verified before starting the next case.
+> Cases 01 and 02 are completed and documented. Case 03 is planned. Scenarios are conducted individually, with baseline recovery verified before starting the next case.
 
 ## 🔎 Investigation Workflow
 
@@ -121,14 +121,16 @@ troubleshooting/
 │   ├── CASE01-FAULT-INJECTION.rsc
 │   └── [six evidence images]
 ├── scenario-02-firewall-policy-failure/
-│   ├── README.md                 # Published after Scenario 02
-│   └── [evidence images]
+│   ├── README.md                 # Case 02 report — completed
+│   ├── CASE02-BASELINE.rsc
+│   ├── CASE02-FAULT-INJECTION.rsc
+│   └── [six evidence images]
 └── scenario-03-static-route-failure/
     ├── README.md                 # Published after Scenario 03
     └── [evidence images]
 ```
 
-**Evidence policy:** Captures show actual observations and test outcomes. Binary RouterOS backups and unreviewed configuration exports are kept private; only appropriately sanitized evidence is published.
+**Evidence policy:** Captures show actual observations and test outcomes. Binary RouterOS backups are kept private. Configuration exports (`.rsc`) and screenshots are reviewed and sanitized before publication.
 
 ---
 
