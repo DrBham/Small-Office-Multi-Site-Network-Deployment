@@ -11,7 +11,7 @@
 
 **A controlled next-hop misconfiguration on the simulated ISP router, followed by routing diagnosis and verified bidirectional connectivity recovery.**
 
-[← Troubleshooting Index](../README.md)
+[← Troubleshooting Index](../README.md) · [↑ Project Overview](../../README.md)
 
 </div>
 
@@ -157,4 +157,4 @@ After recovery, the route displayed **`As` (Active Static)**, `gateway=10.255.10
 
 ---
 
-<div align="center"><sub>CASE 03 — Completed · Part of <a href="../README.md">NDS-NET-001 Network Troubleshooting</a></sub></div>
+<div align="center"><sub>CASE 03 — Completed · Part of <a href="../README.md">NDS-NET-001 Network Troubleshooting</a> · <a href="../../README.md">Project Overview</a></sub></div>
