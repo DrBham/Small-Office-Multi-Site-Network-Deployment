@@ -2,15 +2,16 @@
 
 # 🌐 Small Office Multi-Site Network Deployment
 
-**MikroTik CHR Lab with Firewall, NAT & Inter-Site Routing**  
-PT Nusa Digital Solusi (NDS) · GNS3 / VirtualBox
+### PT Nusa Digital Solusi (NDS) · `NDS-NET-001`
 
-![Project](https://img.shields.io/badge/Project-NDS--NET--001-2563eb?style=flat-square)
-![Progress](https://img.shields.io/badge/Progress-4%20of%207%20Phases-16a34a?style=flat-square)
-![Status](https://img.shields.io/badge/Current%20Stage-Firewall%20Review%20Pending-f59e0b?style=flat-square)
-![Platform](https://img.shields.io/badge/Platform-GNS3%20%7C%20RouterOS-0f766e?style=flat-square)
+**MikroTik CHR · GNS3 · VirtualBox · Static Routing · Firewall & NAT**
 
-*A simulated two-site business network with centralized HQ resources, routed inter-office connectivity, and a dedicated management network.*
+![Progress](https://img.shields.io/badge/Progress-5%2F7%20Phases%20Completed-16a34a?style=flat-square)
+![Current Phase](https://img.shields.io/badge/Phase%2006-WIP-f59e0b?style=flat-square)
+![RouterOS](https://img.shields.io/badge/MikroTik-RouterOS%207.23.8-2563eb?style=flat-square)
+![Environment](https://img.shields.io/badge/Environment-GNS3%20%2B%20VirtualBox-0f766e?style=flat-square)
+
+*A two-site office network with centralized HQ services, private ISP transit, and dedicated router management.*
 
 </div>
 
@@ -21,48 +22,41 @@ PT Nusa Digital Solusi (NDS) · GNS3 / VirtualBox
 <table>
 <tr>
 <td width="50%" valign="top">
-
 <h3>🏢 Business Scenario</h3>
-<p><strong>Headquarters (HQ)</strong> supports a planned 25 users, local DHCP, and an internal HTTP service.</p>
-<p><strong>Branch Office</strong> supports a planned 10 users and requires access to HQ resources.</p>
-<p><strong>4 representative VPCS clients</strong> (2 per site) are used for validation, not as a simulation of all 35 employees.</p>
-
+<p><strong>Headquarters (HQ):</strong> planned capacity for 25 users, DHCP services, and an internal HTTP server.</p>
+<p><strong>Branch Office:</strong> planned capacity for 10 users, local DHCP, and access to HQ resources.</p>
+<p><strong>4 VPCS clients</strong> (2 per office) represent endpoint traffic; they do not simulate all 35 employees.</p>
 </td>
 <td width="50%" valign="top">
-
 <h3>🎯 Network Objectives</h3>
 <ul>
-<li>Separate IPv4 LANs with DHCP allocation</li>
-<li>Bidirectional HQ ↔ Branch connectivity</li>
+<li>Independent IPv4 LANs with DHCP</li>
+<li>Bidirectional HQ ↔ Branch communication</li>
 <li>Static routing through a simulated ISP</li>
-<li>Internal HTTP service at HQ</li>
-<li>Firewall policy, controlled NAT demonstrations, and traffic validation</li>
+<li>Centralized Nginx HTTP service at HQ</li>
+<li>Stateful firewall, scoped DST-NAT, and traffic validation</li>
 </ul>
-
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-
 <h3>🧰 Infrastructure</h3>
 <ul>
 <li><strong>3</strong> MikroTik CHR routers</li>
 <li><strong>2</strong> Ethernet switches</li>
 <li><strong>4</strong> VPCS clients</li>
-<li><strong>1</strong> Docker Nginx server</li>
+<li><strong>1</strong> Docker Nginx server (HQ only)</li>
 </ul>
-
 </td>
 <td width="50%" valign="top">
-
 <h3>🛠️ Technology Stack</h3>
 <ul>
-<li><strong>Emulation:</strong> GNS3 + VirtualBox</li>
-<li><strong>Routing:</strong> MikroTik RouterOS (WinBox / CLI)</li>
-<li><strong>Services:</strong> DHCP + Nginx HTTP</li>
-<li><strong>Network:</strong> IPv4 / Static Routing</li>
+<li><strong>Network emulator:</strong> GNS3</li>
+<li><strong>Virtualization:</strong> Oracle VirtualBox + GNS3 VM</li>
+<li><strong>Router OS:</strong> MikroTik RouterOS CHR</li>
+<li><strong>Management:</strong> WinBox, RouterOS CLI, SSH</li>
+<li><strong>Clients & service:</strong> VPCS, Docker Nginx</li>
 </ul>
-
 </td>
 </tr>
 </table>
@@ -71,206 +65,223 @@ PT Nusa Digital Solusi (NDS) · GNS3 / VirtualBox
 
 <div align="center">
 
-![GNS3 topology — HQ, ISP transit, Branch and HQ HTTP server](assets/network-topology.png)
+![NDS multi-site GNS3 topology](assets/network-topology.png)
 
-<sub>HQ and Branch are connected through a simulated private ISP transit. Router <code>ether1</code> interfaces use an isolated VirtualBox Host-Only management network.</sub>
+<sub>HQ ↔ simulated private ISP ↔ Branch. The HTTP server is deployed only at HQ. Each CHR uses <code>ether1</code> for VirtualBox Host-Only management.</sub>
 
 </div>
 
-## 🗓️ Project Phase Timeline
+## 🗓️ Project Timeline
 
 ```mermaid
 flowchart LR
-    P1["01 · Network Design"] --> P2["02 · Infrastructure"]
-    P2 --> P3["03 · DHCP & HTTP"]
+    P1["01 · Design"] --> P2["02 · Deployment"]
+    P2 --> P3["03 · LAN & HTTP"]
     P3 --> P4["04 · Static Routing"]
     P4 --> P5["05 · Firewall & NAT"]
-    P5 --> P6["06 · Validation & Troubleshooting"]
-    P6 --> P7["07 · Final Documentation"]
-    classDef complete fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:2px;
-    classDef pending fill:#fef3c7,stroke:#d97706,color:#78350f,stroke-width:2px;
+    P5 --> P6["06 · Validation & Faults"]
+    P6 --> P7["07 · Documentation"]
+    classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:2px;
+    classDef wip fill:#fef3c7,stroke:#d97706,color:#78350f,stroke-width:2px;
     classDef planned fill:#e2e8f0,stroke:#64748b,color:#334155;
-    class P1,P2,P3,P4 complete;
-    class P5 pending;
-    class P6,P7 planned;
+    class P1,P2,P3,P4,P5 done;
+    class P6 wip;
+    class P7 planned;
 ```
 
-| Phase | Focus | Status |
-|:--:|---|:--:|
-| 01 | Network design & IP addressing baseline | ✅ Completed |
-| 02 | GNS3 deployment, interfaces & WAN neighbor connectivity | ✅ Completed |
-| 03 | LAN DHCP, client connectivity & HQ HTTP service | ✅ Completed |
-| 04 | Inter-site static routing & service connectivity | ✅ Completed |
-| 05 | Firewall policy, NAT demonstrations & connection tracking | 🟠 Not started |
-| 06 | Acceptance tests, three controlled faults & optional captures | ⚪ Not started |
-| 07 | Sanitized exports, private backups & portfolio documentation | ⚪ Not started |
+| Phase | Deliverable | Status |
+|:---:|---|:---:|
+| 01 | Network design, subnetting, and IP addressing | ✅ Completed |
+| 02 | GNS3 topology, RouterOS CHR deployment, and WAN interfaces | ✅ Completed |
+| 03 | LAN DHCP, VPCS clients, and HQ Nginx HTTP service | ✅ Completed |
+| 04 | Static routing and inter-site connectivity | ✅ Completed |
+| 05 | INPUT/FORWARD firewall, management hardening, DST-NAT, regression | ✅ Completed |
+| **06** | **End-to-end validation and controlled troubleshooting** | **🚧 WIP** |
+| 07 | Technical documentation, evidence, and portfolio finalization | ⏳ Planned |
 
-<sub>Milestone dates: design approved 29 October 2026; infrastructure and LAN services verified 30 October 2026; inter-site routing verified 31 October 2026. Remaining phases have no scheduled dates.</sub>
+<sub>Milestones: design approved 29 Oct 2026; infrastructure and LAN verified 30 Oct 2026; inter-site routing verified by 31 Oct 2026; firewall/NAT regression completed 1 Nov 2026.</sub>
 
 ## 🌐 Network Addressing
 
 <table>
 <tr>
 <td width="50%" valign="top">
-<h3>🔵 Headquarters</h3>
-<p><strong>LAN:</strong> <code>172.22.10.0/26</code><br>
+<h3>🔵 Headquarters LAN</h3>
+<p><strong>Subnet:</strong> <code>172.22.10.0/26</code><br>
 <strong>Gateway:</strong> <code>172.22.10.1</code><br>
-<strong>DHCP Pool:</strong> <code>172.22.10.20–172.22.10.59</code><br>
-<strong>Capacity:</strong> 62 usable addresses<br>
-<strong>HTTP Server:</strong> <code>172.22.10.10</code></p>
+<strong>DHCP pool:</strong> <code>172.22.10.20–172.22.10.59</code><br>
+<strong>HTTP server:</strong> <code>172.22.10.10:80</code><br>
+<strong>Usable hosts:</strong> 62</p>
 </td>
 <td width="50%" valign="top">
-<h3>🟢 Branch Office</h3>
-<p><strong>LAN:</strong> <code>172.22.20.0/27</code><br>
+<h3>🟢 Branch LAN</h3>
+<p><strong>Subnet:</strong> <code>172.22.20.0/27</code><br>
 <strong>Gateway:</strong> <code>172.22.20.1</code><br>
-<strong>DHCP Pool:</strong> <code>172.22.20.10–172.22.20.29</code><br>
-<strong>Capacity:</strong> 30 usable addresses<br>
-<strong>Access:</strong> HQ resources via simulated ISP</p>
+<strong>DHCP pool:</strong> <code>172.22.20.10–172.22.20.29</code><br>
+<strong>HTTP server:</strong> None; uses HQ service<br>
+<strong>Usable hosts:</strong> 30</p>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<h3>🟠 Private WAN Transit</h3>
+<p><strong>HQ ↔ ISP:</strong> <code>10.255.10.0/30</code><br>
+HQ <code>10.255.10.1</code> · ISP <code>10.255.10.2</code></p>
+<p><strong>ISP ↔ Branch:</strong> <code>10.255.10.4/30</code><br>
+ISP <code>10.255.10.5</code> · Branch <code>10.255.10.6</code></p>
+</td>
+<td width="50%" valign="top">
+<h3>🟣 Management Network</h3>
+<p><strong>VirtualBox Host-Only:</strong> <code>192.168.56.0/24</code></p>
+<p>HQ <code>192.168.56.115</code><br>
+ISP <code>192.168.56.113</code><br>
+Branch <code>192.168.56.114</code></p>
+<p><sub>Addresses shown are lab-assigned management IPs; <code>ether1</code> obtains its address dynamically.</sub></p>
 </td>
 </tr>
 </table>
 
-### WAN Transit & Interface Mapping
+<details>
+<summary><strong>📋 Router interfaces & static routes</strong></summary>
 
-| Router | Interface | IPv4 Address | Role |
+| Router | Interface | Address | Function |
 |---|---|---|---|
-| `NDS-CHR-HQ` | `ether2` | `10.255.10.1/30` | WAN → ISP |
-| `NDS-CHR-HQ` | `ether3` | `172.22.10.1/26` | HQ LAN |
-| `NDS-CHR-ISP` | `ether2` | `10.255.10.2/30` | WAN → HQ |
-| `NDS-CHR-ISP` | `ether3` | `10.255.10.5/30` | WAN → Branch |
-| `NDS-CHR-BRANCH` | `ether2` | `10.255.10.6/30` | WAN → ISP |
-| `NDS-CHR-BRANCH` | `ether3` | `172.22.20.1/27` | Branch LAN |
+| HQ | `ether2` | `10.255.10.1/30` | WAN → ISP |
+| HQ | `ether3` | `172.22.10.1/26` | HQ LAN |
+| ISP | `ether2` | `10.255.10.2/30` | WAN → HQ |
+| ISP | `ether3` | `10.255.10.5/30` | WAN → Branch |
+| Branch | `ether2` | `10.255.10.6/30` | WAN → ISP |
+| Branch | `ether3` | `172.22.20.1/27` | Branch LAN |
 
-> **WANs:** `10.255.10.0/30` (HQ–ISP) and `10.255.10.4/30` (ISP–Branch). **Management:** `ether1` on each CHR uses dynamic addressing within VirtualBox Host-Only `192.168.56.0/24`; management is separate from business traffic.
+| Router | Destination | Next hop |
+|---|---|---|
+| HQ | `172.22.20.0/27` | `10.255.10.2` |
+| ISP | `172.22.10.0/26` | `10.255.10.1` |
+| ISP | `172.22.20.0/27` | `10.255.10.6` |
+| Branch | `172.22.10.0/26` | `10.255.10.5` |
 
-## 🔀 Inter-Site Static Routing
+</details>
 
-| Router | Destination Network | Next Hop | Status |
-|---|---|---|---|
-| HQ | `172.22.20.0/27` | `10.255.10.2` | ✅ Active |
-| ISP | `172.22.10.0/26` | `10.255.10.1` | ✅ Active |
-| ISP | `172.22.20.0/27` | `10.255.10.6` | ✅ Active |
-| Branch | `172.22.10.0/26` | `10.255.10.5` | ✅ Active |
-
-All four static routes were verified in the RouterOS `main` routing table. **Inter-site NAT is not required** for this controlled, privately routed design. Firewall policy evaluation remains part of Phase 05.
-
-## ✅ Implemented Services & Verification
+## 🛡️ Project Scope
 
 <table>
 <tr>
 <td width="50%" valign="top">
-<h3>📡 LAN & DHCP</h3>
+<h3>✅ In Scope</h3>
 <ul>
-<li>HQ DHCP leases: <strong>2 bound</strong></li>
-<li>Branch DHCP leases: <strong>2 bound</strong></li>
-<li>Local gateway ping: <strong>4/4 clients passed</strong></li>
-<li>Direct WAN neighbor tests: <strong>4 × 10/10</strong></li>
-<li>Active connected and static routes verified</li>
+<li>IPv4 addressing & subnetting</li>
+<li>DHCP at HQ and Branch</li>
+<li>Static inter-site routing via private ISP transit</li>
+<li>Centralized HTTP server at HQ</li>
+<li>Stateful INPUT and FORWARD firewalls</li>
+<li>WinBox/SSH management restrictions</li>
+<li>HQ HTTP destination NAT</li>
+<li>Traffic verification and controlled fault diagnosis</li>
 </ul>
 </td>
 <td width="50%" valign="top">
-<h3>🔁 Inter-Site Connectivity</h3>
+<h3>🚫 Out of Scope</h3>
 <ul>
-<li>HQ → Branch gateway: <strong>5/5</strong></li>
-<li>Branch → HQ gateway: <strong>5/5</strong></li>
-<li>PC-HQ-01 → PC-BR-01: <strong>5/5</strong></li>
-<li>PC-BR-01 → PC-HQ-01: <strong>5/5</strong></li>
-<li>Router-originated tests used LAN source IPs</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<h3>🌍 Internal HTTP Service</h3>
-<ul>
-<li><strong>Host:</strong> <code>SRV-HQ-01</code></li>
-<li><strong>Address:</strong> <code>172.22.10.10/26</code></li>
-<li><strong>Service:</strong> Nginx, TCP <code>80</code></li>
-<li>HQ router HTTP Fetch: <strong>200 OK</strong></li>
-<li>Branch router HTTP Fetch: <strong>200 OK</strong></li>
-</ul>
-</td>
-<td width="50%" valign="top">
-<h3>🔐 Planned Security Work (Phase 05)</h3>
-<ul>
-<li>Audit filter, NAT, conntrack and management services</li>
-<li>Define <code>input</code> / <code>forward</code> policy and safe rule order</li>
-<li>Restrict SSH and WinBox to management access</li>
-<li>Demonstrate scoped source NAT and HTTP destination NAT</li>
-<li>Verify connection tracking and regression tests</li>
+<li>Public Internet access</li>
+<li>Site-to-site VPN</li>
+<li>VLANs or wireless infrastructure</li>
+<li>OSPF/BGP dynamic routing</li>
+<li>High availability and redundancy</li>
+<li>Dedicated internal server at Branch</li>
+<li>Inter-site SRC-NAT / masquerade</li>
 </ul>
 </td>
 </tr>
 </table>
 
-> **Validation boundary:** Branch HTTP success was measured using RouterOS Fetch from the **Branch router** with source IP `172.22.20.1`; direct HTTP testing from a Branch VPCS client has not been performed. ICMP tests from VPCS clients were verified separately.
-
-## 🔒 Planned Security & Testing Milestones
+## ⚙️ Implemented Network Features
 
 <table>
 <tr>
 <td width="50%" valign="top">
-<h3>🟠 Phase 05 · Firewall & NAT</h3>
+<h3>🔀 Routing & Services</h3>
 <ul>
-<li><strong>Read-only baseline:</strong> firewall, NAT, conntrack, RouterOS services</li>
-<li><strong>Firewall policy:</strong> protect management, permit required LAN and inter-site traffic</li>
-<li><strong>Source NAT:</strong> temporary, narrowly scoped masquerade demonstration; remove afterward</li>
-<li><strong>Destination NAT:</strong> controlled WAN TCP/80 forwarding to HQ Nginx</li>
-<li><strong>Verification:</strong> rule order, service access, connection tracking and regression</li>
-</ul>
-<p><strong>Status:</strong> Not started. No new filter or NAT rules have been verified.</p>
-</td>
-<td width="50%" valign="top">
-<h3>⚪ Phase 06–07 · Evidence & Delivery</h3>
-<ul>
-<li><strong>Acceptance tests:</strong> recorded expected vs actual results</li>
-<li><strong>Fault cases:</strong> WAN link down, firewall blocking HTTP, incorrect next-hop</li>
-<li><strong>Recovery:</strong> baseline, fault, diagnosis, fix and retest</li>
-<li><strong>Configuration:</strong> private RouterOS binary backups; sanitized text exports</li>
-<li><strong>Portfolio:</strong> topology, test matrix, design rationale and troubleshooting reports</li>
-</ul>
-<p><strong>Status:</strong> Planned, with no unverified PASS claims.</p>
-</td>
-</tr>
-</table>
-
-> **Design safeguards:** The management segment uses VirtualBox Host-Only, not public WAN. Inter-site traffic already works without NAT. A NAT rule matching all traffic on HQ <code>ether2</code> could affect routing unexpectedly; any demonstration must be scoped and retested. Access to HQ WAN address <code>10.255.10.1</code> from BRANCH may require an explicit test route and verified return path. VPCS does not support <code>curl</code>, so application-level tests use RouterOS Fetch or an appropriate HTTP-capable endpoint.
-
-## 🛡️ Project Scope & Limitations
-
-<table>
-<tr>
-<td width="50%" valign="top">
-<h3>✅ Included</h3>
-<ul>
-<li>Two IPv4 LANs and DHCP services</li>
-<li>Private WAN transit with three routers</li>
-<li>Static inter-site routing</li>
-<li>HQ internal HTTP service</li>
-<li>Firewall policy, connection tracking & controlled NAT demonstrations</li>
-<li>End-to-end tests and three fault investigations</li>
-<li>Sanitized config exports and technical documentation</li>
+<li>Static routes between HQ and Branch</li>
+<li>Local DHCP services on both office routers</li>
+<li>Nginx HTTP server at <code>172.22.10.10</code></li>
+<li>Management network separated from office LANs</li>
 </ul>
 </td>
 <td width="50%" valign="top">
-<h3>🚫 Excluded</h3>
+<h3>🔒 Firewall & NAT</h3>
 <ul>
-<li>Public Internet or production WAN access</li>
-<li>Site-to-site VPN and encryption</li>
-<li>VLAN segmentation</li>
-<li>OSPF / BGP</li>
-<li>High availability</li>
-<li>Enterprise authentication</li>
-<li>Wireless and hardware-offload features in this virtual topology</li>
+<li>Stateful INPUT/FORWARD policies on all 3 routers</li>
+<li>Explicit ICMP/HTTP allowances and default-drop rules</li>
+<li>SSH/WinBox scoped to Host-Only management subnet</li>
+<li>HQ DST-NAT: <code>10.255.10.1:80</code> → <code>172.22.10.10:80</code></li>
+<li>No inter-site SRC-NAT or masquerade</li>
 </ul>
 </td>
 </tr>
 </table>
 
-> **Lab limitation:** The ISP router is a simulated private transit device, **not** the public Internet. Successful traffic exchange here does not imply secure connectivity between geographically separated offices. A production design would require additional WAN and security controls.
+## ✅ Verified Results
+
+<table>
+<tr>
+<td width="50%" valign="top">
+<h3>📡 LAN & Inter-Site</h3>
+<ul>
+<li><strong>4/4</strong> VPCS clients received expected DHCP addressing</li>
+<li><strong>5/5</strong> ICMP replies HQ → Branch</li>
+<li><strong>5/5</strong> ICMP replies Branch → HQ</li>
+<li>Both site gateways and connected routes verified</li>
+</ul>
+</td>
+<td width="50%" valign="top">
+<h3>🌍 HTTP & NAT</h3>
+<ul>
+<li><strong>HTTP 200</strong> to HQ Nginx directly</li>
+<li><strong>HTTP 200</strong> via HQ WAN port forwarding</li>
+<li>DST-NAT connection tracking flag observed</li>
+<li>HQ NAT rule packet counter confirmed</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<h3>🧱 Firewall Enforcement</h3>
+<ul>
+<li>INPUT and FORWARD default-drop enabled on all routers</li>
+<li>Branch negative forwarding test blocked <strong>5/5</strong> ICMP attempts</li>
+<li>Drop-rule counter increased by <strong>5 packets</strong></li>
+</ul>
+</td>
+<td width="50%" valign="top">
+<h3>🔐 Management Access</h3>
+<ul>
+<li>SSH login verified on HQ, ISP, and Branch</li>
+<li>WinBox used for management over Host-Only network</li>
+<li>Management source restriction configured for <code>192.168.56.0/24</code></li>
+</ul>
+</td>
+</tr>
+</table>
+
+> **Test coverage:** HTTP requests were generated by the **Branch router** with source `172.22.20.1`. Client-originated HTTP forwarding through the Branch router has not been independently validated with a LAN HTTP client. The deployment includes no additional Branch server.
+
+## 🚧 Current Work — Phase 06
+
+**Validation & Troubleshooting · WIP**
+
+Controlled network fault isolation, recovery tests, and post-recovery verification are underway as the next project stage. The completed Phase 01–05 deployment provides the known-good baseline.
+
+## 📚 Project Documentation
+
+| Material | Availability |
+|---|---|
+| Network topology and addressing design | Included in this README and topology asset |
+| Implementation overview and completed milestone results | Included in this README |
+| Phase 06 troubleshooting evidence and reports | WIP |
+| Sanitized RouterOS exports, final evidence collection, portfolio handoff | Planned for Phase 07 |
+
+Configuration backups and files containing credentials are kept outside the public repository.
 
 ---
 
-<div align="center">
-<sub>Network Design v1.0 · Interface Mapping v1.1 · MTCNA-oriented portfolio lab · Fictional company</sub>
-</div>
+<div align="center"><sub>Network Design v1.0 · Interface Mapping v1.1 · Fictional company / virtual lab · Updated 1 November 2026</sub></div>
