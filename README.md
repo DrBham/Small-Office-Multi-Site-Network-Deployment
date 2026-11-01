@@ -6,8 +6,8 @@
 
 **MikroTik CHR · GNS3 · VirtualBox · Static Routing · Firewall & NAT**
 
-![Progress](https://img.shields.io/badge/Progress-6%2F7%20Phases%20Completed-16a34a?style=flat-square)
-![Current Phase](https://img.shields.io/badge/Phase%2007-WIP-f59e0b?style=flat-square)
+![Progress](https://img.shields.io/badge/Progress-7%2F7%20Phases%20Completed-16a34a?style=flat-square)
+![Project Status](https://img.shields.io/badge/Project-Completed-16a34a?style=flat-square)
 ![RouterOS](https://img.shields.io/badge/MikroTik-RouterOS%207.23.8-2563eb?style=flat-square)
 ![Environment](https://img.shields.io/badge/Environment-GNS3%20%2B%20VirtualBox-0f766e?style=flat-square)
 
@@ -84,8 +84,7 @@ flowchart LR
     classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:2px;
     classDef wip fill:#fef3c7,stroke:#d97706,color:#78350f,stroke-width:2px;
     classDef planned fill:#e2e8f0,stroke:#64748b,color:#334155;
-    class P1,P2,P3,P4,P5,P6 done;
-    class P7 wip;
+    class P1,P2,P3,P4,P5,P6,P7 done;
 ```
 
 | Phase | Deliverable | Status |
@@ -96,9 +95,9 @@ flowchart LR
 | 04 | Static routing and inter-site connectivity | ✅ Completed |
 | 05 | INPUT/FORWARD firewall, management hardening, DST-NAT, regression | ✅ Completed |
 | 06 | End-to-end validation and controlled troubleshooting (3 cases) | ✅ Completed |
-| **07** | **Technical documentation, evidence, and portfolio finalization** | **🚧 WIP** |
+| **07** | **Technical documentation, evidence, and portfolio finalization** | **✅ Completed** |
 
-<sub>Milestones: design approved 29 Oct 2026; infrastructure and LAN verified 30 Oct 2026; inter-site routing verified by 31 Oct 2026; firewall/NAT regression and all three troubleshooting scenarios completed 1 Nov 2026; final portfolio preparation underway.</sub>
+<sub>Milestones: design approved 29 Oct 2026; infrastructure and LAN verified 30 Oct 2026; inter-site routing verified by 31 Oct 2026; firewall/NAT regression and all three troubleshooting scenarios completed 1 Nov 2026; final documentation and portfolio assembled 1 Nov 2026.</sub>
 
 ## 🌐 Network Addressing
 
@@ -276,38 +275,57 @@ Three controlled failures were introduced, investigated, and recovered against t
 
 [**Browse all troubleshooting documentation**](troubleshooting/)
 
-## 🚧 Current Work — Phase 07
-
-**Final Documentation & Portfolio · Work in Progress**
-
-The network implementation and all three controlled troubleshooting scenarios are complete. The final phase focuses on consolidating evidence, reviewing public-facing documentation, checking relative links, verifying configuration exports are sanitized, and preparing the repository for portfolio publication.
-
-## 📚 Project Documentation
+## 📦 Project Files & Final Router Configurations
 
 <table>
 <tr>
 <td width="50%" valign="top">
-<h3>✅ Available</h3>
+<h3>🗺️ GNS3 Project</h3>
+<p><a href="assets/Small-Office-Multi-Site-Network-Deployment.gns3"><strong>Download GNS3 topology definition</strong></a></p>
+<p>The <code>.gns3</code> file stores the project topology and node/link definitions. It does <strong>not</strong> include RouterOS CHR virtual disks or a ready-to-run virtual environment.</p>
+</td>
+<td width="50%" valign="top">
+<h3>⚙️ Final RouterOS Exports</h3>
 <ul>
-<li>Network architecture, addressing, scope, and implementation overview</li>
-<li>Verified LAN, routing, HTTP, firewall, and NAT results</li>
-<li><a href="troubleshooting/">Troubleshooting index</a> and three completed case reports</li>
-<li>Per-case fault and recovery screenshots</li>
+<li><a href="configurations/NDS-CHR-HQ-FINAL.rsc">NDS-CHR-HQ-FINAL.rsc</a></li>
+<li><a href="configurations/NDS-CHR-ISP-FINAL.rsc">NDS-CHR-ISP-FINAL.rsc</a></li>
+<li><a href="configurations/NDS-CHR-BRANCH-FINAL.rsc">NDS-CHR-BRANCH-FINAL.rsc</a></li>
+</ul>
+<p>Final post-recovery configuration snapshots of the three routers, separate from the fault-state exports in the case studies.</p>
+</td>
+</tr>
+</table>
+
+> **Reproduction requirements:** GNS3, VirtualBox with compatible MikroTik CHR virtual machines, appropriate network adapters/Host-Only management setup, VPCS, and Docker Nginx are required. Review node templates and paths before opening the project. RouterOS <code>.rsc</code> files are configuration exports, not safe incremental patches to import into already configured devices.
+
+## ✅ Project Delivery Summary
+
+<table>
+<tr>
+<td width="50%" valign="top">
+<h3>📡 Network Implementation</h3>
+<ul>
+<li>HQ and Branch IPv4 LANs with DHCP</li>
+<li>Inter-site static routing through private ISP transit</li>
+<li>Centralized HQ Nginx HTTP service</li>
+<li>Stateful INPUT/FORWARD firewall policies and HQ HTTP DST-NAT</li>
+<li>Final configuration exports for all three routers</li>
 </ul>
 </td>
 <td width="50%" valign="top">
-<h3>🚧 Final Review</h3>
+<h3>🧪 Validation & Documentation</h3>
 <ul>
-<li>Repository structure and documentation link audit</li>
-<li>Review and sanitization of public RouterOS <code>.rsc</code> exports</li>
-<li>Final evidence and configuration consistency checks</li>
-<li>Publication-ready portfolio handoff</li>
+<li>Connectivity and service verification results</li>
+<li><a href="troubleshooting/">Three completed troubleshooting cases</a></li>
+<li>Baseline and fault exports, plus six evidence images per case</li>
+<li>Project topology diagram and GNS3 definition</li>
+<li>Linked technical reports and recovery outcomes</li>
 </ul>
 </td>
 </tr>
 </table>
 
-> **Publication note:** RouterOS binary backups and any exports containing secrets remain private. Configuration snapshots intended for public access must be reviewed and sanitized before being committed.
+> **Security and scope:** RouterOS binary backups, VM disks, and credentials are not part of this public repository. The ISP is simulated private transit, not public Internet. HTTP validation was performed from the Branch router rather than an HTTP-capable Branch LAN client. The exported files describe a virtual lab, not a production-ready deployment.
 
 ---
 
